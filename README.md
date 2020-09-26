@@ -8,7 +8,37 @@ I used a Model Maker library that simplifies the process of adapting and convert
 
 I provide full training code, data preparation scripts, and a pretrained model.
 
-The detector has speed **~10-15 ms/image** for floating model (image size is 224x224, Macbook Pro, CPU, 2 GHz Quad-Core Intel Core i5).
+The classifier has speed **~17 ms/image** for `.tflite` floating model (image size is 224x224, CPU, 2 GHz Quad-Core Intel Core i5).
+
+
+## Model interference
+
+<table>
+    <thead>
+        <tr>
+            <th>Configuration</th>
+            <th>Model Type</th>
+            <th>Time</th>
+            <th>FPS</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan=4>Macbook Pro, CPU<br/>2 GHz Quad-Core Intel Core i5</td>
+        </tr>
+        <tr>
+            <td>Floating</td>
+            <td>17 ms</td>
+            <td>58</td>
+        </tr>
+        <tr>
+            <td>Quant</td>
+            <td><a href='https://github.com/tensorflow/tensorflow/issues/21698'>900 ms</a></td>
+            <td>1</td>
+        </tr>
+    </tbody>
+</table>
+
 
 
 ## How to use the pretrained model

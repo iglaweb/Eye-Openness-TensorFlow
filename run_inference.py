@@ -27,6 +27,11 @@ print("Version: ", tf.__version__)
 print("Eager mode: ", tf.executing_eagerly())
 print("GPU is", "available" if tf.test.is_gpu_available() else "NOT AVAILABLE")
 
+TFLITE_FLOAT_MODEL = './models_output/mobilenetv2_eyes_model_float.tflite'
+
+# it runs much slower than float version on CPU
+# https://github.com/tensorflow/tensorflow/issues/21698#issuecomment-414764709
+TFLITE_QUANT_MODEL = './models_output/mobilenetv2_eyes_model_quant.tflite'
 VIDEO_FILE = '/Users/igla/Downloads/Memorable Monologue- Talking in the Third Person.mp4'
 TEST_DIR = './out_close_eye/'
 dataset_labels = ['closed', 'opened']
@@ -42,7 +47,7 @@ predictor = dlib.shape_predictor('dlib/shape_predictor_68_face_landmarks.dat')
 face_model = cv2.dnn.readNetFromCaffe('caffe/deploy.prototxt', 'caffe/weights.caffemodel')
 
 interpreter = tf.lite.Interpreter(
-    model_path="./models_output/mobilenetv2_eyes_model_float.tflite")
+    model_path=TFLITE_FLOAT_MODEL)
 interpreter.allocate_tensors()
 
 input_details = interpreter.get_input_details()
@@ -65,6 +70,9 @@ print('Floating model is: ' + str(floating_model))
 height = input_details[0]['shape'][1]
 width = input_details[0]['shape'][2]
 
+time_elapsed = 0
+exec_cnt = 0
+
 
 def make_interference(image_frame):
     """
@@ -75,9 +83,12 @@ def make_interference(image_frame):
     image_frame = cv2.resize(image_frame, (width, height), cv2.INTER_AREA)
     cv2.imshow('TEST', image_frame)
 
-    # Normalize to [0, 1]
-    image_frame = image_frame / 255.0
-    images_data = np.expand_dims(image_frame, 0).astype(np.float32)  # or [img_data]
+    if floating_model:
+        # Normalize to [0, 1]
+        image_frame = image_frame / 255.0
+        images_data = np.expand_dims(image_frame, 0).astype(np.float32)  # or [img_data]
+    else:  # 0.00390625 * q
+        images_data = np.expand_dims(image_frame, 0).astype(np.uint8)  # or [img_data]
 
     start = get_timestamp_ms()
 
@@ -87,12 +98,22 @@ def make_interference(image_frame):
     interpreter.invoke()
     output_data = interpreter.get_tensor(output_details[0]['index'])
 
-    print(f'Elapsed time: {get_timestamp_ms() - start} ms')
+    global time_elapsed
+    global exec_cnt
+    diff = get_timestamp_ms() - start
+    time_elapsed = time_elapsed + diff
+    exec_cnt = exec_cnt + 1
+    print(f'Elapsed time: {diff} ms')
+    print(f'Avg time: {time_elapsed / exec_cnt}')
 
     predict_label = np.argmax(output_data)
+    score = 100 * output_data[0][predict_label]
+    if floating_model is False:
+        score = score * 0.00390625
+
     # print(np.argmax(output()[0]))
     print("Predicted value for [0, 1] normalization. Label index: {}, confidence: {:2.0f}%"
-          .format(predict_label, 100 * output_data[0][np.argmax(output_data)]))
+          .format(predict_label, score))
 
     print(output_data)
     results = np.squeeze(output_data)
@@ -254,7 +275,7 @@ if __name__ == '__main__':
             cv2.putText(frame, f"Eyes closed {eye_close_counter}", (0, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255),
                         2)
             opened = "Opened" if isOpened else "Closed"
-            cv2.putText(frame, opened, (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+            cv2.putText(frame, opened, (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
 
             # placeholder for eye regions
             placeholder_max_w = max(placeholder_max_w, left_eye_area.shape[1] + (10 * 2))
