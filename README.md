@@ -4,7 +4,7 @@
 
 The eye state classifier is based on transfer learning technique. I use transfer learning where we take a pre-trained network (trained on about a million general images), use it to extract features, and train a new layer on top for our own task of classifying images of eyes.
 
-I used a Model Maker library that simplifies the process of adapting and converting a TensorFlow neural-network model to particular input data. The newly created model is based on MobileNetV2 backbone.
+I used a [Model Maker](https://www.tensorflow.org/lite/tutorials/model_maker_image_classification) library that simplifies the process of adapting and converting a TensorFlow neural-network model to particular input data. The newly created model is based on MobileNetV2 backbone.
 
 I provide full training code, data preparation scripts, and a pretrained model.
 
@@ -18,7 +18,7 @@ The classifier has speed **~17 ms/image** for `.tflite` floating model (image si
         <tr>
             <th>Configuration</th>
             <th>Model Type</th>
-            <th>Time</th>
+            <th>Time (avg)</th>
             <th>FPS</th>
         </tr>
     </thead>
