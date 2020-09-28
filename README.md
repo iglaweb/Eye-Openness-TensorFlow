@@ -13,14 +13,15 @@ The classifier has speed **~17 ms/image** for `.tflite` floating model (image si
 
 ## Prepare dataset
 
-Total images and classes:
+<p>Total images and classes:</p>
 
 <div>
-  <img align="center" src="img/prepare_dataset_random.png" alt="Configure delegate options">
+  <img align="center" src="img/prepare_dataset_random.png" alt="Dataset"
+  style="max-width: 300px; height: auto; ">
   <br /><br />
 
-  Evaluate model:
-   <img align="center" src="img/evaluate_model.png" alt="Run model">
+  <p>Evaluate model:</p>
+   <img align="center" src="img/evaluate_model.png" alt="Evaluate model" style="max-width: 300px; height: auto; ">
 </div>
 
 ## Model interference
@@ -29,31 +30,42 @@ Total images and classes:
 	<tbody>
 		<tr>
             <th>Configuration</th>
+            <th>Config</th>
             <th>Model Type</th>
             <th>Time (avg)</th>
             <th>FPS</th>
 		</tr>
 		<tr>
 			<td rowspan="2">Macbook Pro, CPU<br/>2 GHz Quad-Core Intel Core i5</td>
+            <td>CPU</td>
 			<td>Floating</td>
             <td>17 ms</td>
             <td>58</td>
 		</tr>
 		<tr>
+            <td>CPU</td>
 			<td>Quantized</td>
             <td><a href='https://github.com/tensorflow/tensorflow/issues/21698'>900 ms</a></td>
             <td>1</td>
 		</tr>
 		<tr>
-			<td rowspan="2">Xiaomi MI8<br />(SDM845, Adreno 630)</td>
-			<td>CPU, 3 threads</td>
+			<td rowspan="3">Xiaomi MI8<br />(SDM845, Adreno 630)</td>
+            <td>CPU, 3 threads</td>
+			<td>Floating</td>
             <td>35 ms</td>
             <td>28</td>
 		</tr>
 		<tr>
-			<td>GPU</td>
+            <td>GPU</td>
+			<td>Floating</td>
             <td>13 ms</td>
             <td>75</td>
+		</tr>
+        <tr>
+            <td>CPU, 3 threads</td>
+			<td>Quantized</td>
+            <td>29 ms</td>
+            <td>34</td>
 		</tr>
 	</tbody>
 </table>
