@@ -11,34 +11,52 @@ I provide full training code, data preparation scripts, and a pretrained model.
 The classifier has speed **~17 ms/image** for `.tflite` floating model (image size is 224x224, CPU, 2 GHz Quad-Core Intel Core i5).
 
 
+## Prepare dataset
+
+Total images and classes:
+
+<div>
+  <img align="center" src="img/prepare_dataset_random.png" alt="Configure delegate options">
+  <br /><br />
+
+  Evaluate model:
+   <img align="center" src="img/evaluate_model.png" alt="Run model">
+</div>
+
 ## Model interference
 
 <table>
-    <thead>
-        <tr>
+	<tbody>
+		<tr>
             <th>Configuration</th>
             <th>Model Type</th>
             <th>Time (avg)</th>
             <th>FPS</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td rowspan=4>Macbook Pro, CPU<br/>2 GHz Quad-Core Intel Core i5</td>
-        </tr>
-        <tr>
-            <td>Floating</td>
+		</tr>
+		<tr>
+			<td rowspan="2">Macbook Pro, CPU<br/>2 GHz Quad-Core Intel Core i5</td>
+			<td>Floating</td>
             <td>17 ms</td>
             <td>58</td>
-        </tr>
-        <tr>
-            <td>Quant</td>
+		</tr>
+		<tr>
+			<td>Quantized</td>
             <td><a href='https://github.com/tensorflow/tensorflow/issues/21698'>900 ms</a></td>
             <td>1</td>
-        </tr>
-    </tbody>
+		</tr>
+		<tr>
+			<td rowspan="2">Xiaomi MI8<br />(SDM845, Adreno 630)</td>
+			<td>CPU, 3 threads</td>
+            <td>35 ms</td>
+            <td>28</td>
+		</tr>
+		<tr>
+			<td>GPU</td>
+            <td>13 ms</td>
+            <td>75</td>
+		</tr>
+	</tbody>
 </table>
-
 
 
 ## How to use the pretrained model
