@@ -67,6 +67,25 @@ The classifier has speed **~17 ms/image** for `.tflite` floating model (image si
             <td>29 ms</td>
             <td>34</td>
 		</tr>
+		<tr>
+			<td rowspan="3">Google Pixel<br />(MSM8996, Adreno 530)</td>
+            <td>CPU, 3 threads</td>
+			<td>Floating</td>
+            <td>48 ms</td>
+            <td>17</td>
+		</tr>
+		<tr>
+            <td>GPU</td>
+			<td>Floating</td>
+            <td>46 ms</td>
+            <td>19</td>
+		</tr>
+        <tr>
+            <td>CPU, 3 threads</td>
+			<td>Quantized</td>
+            <td>42 ms</td>
+            <td>19</td>
+		</tr>
 	</tbody>
 </table>
 
